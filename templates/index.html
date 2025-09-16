@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diabetes Health Predictor</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #2a7de1;
+        --primary-dark: #1a56a7;
+        --secondary: #4cc9b4;
+        --danger: #e63946;
+        --success: #2a9d8f;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Open Sans", sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: var(--dark);
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 20px 0;
+      }
+
+      header {
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        color: white;
+        padding: 25px;
+        text-align: center;
+      }
+
+      header h1 {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      header p {
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .form-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark);
+        font-size: 0.95rem;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 14px 20px;
+        border: 2px solid var(--light-gray);
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(42, 125, 225, 0.2);
+      }
+
+      .input-group input:hover {
+        border-color: #a3c6f4;
+      }
+
+      .btn {
+        display: inline-block;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        color: white;
+        padding: 15px 35px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(42, 125, 225, 0.3);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(42, 125, 225, 0.4);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .result-container {
+        text-align: center;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        background: var(--light);
+        animation: fadeIn 0.5s ease;
+      }
+
+      .positive {
+        background: linear-gradient(to right, #ff9a9e, #fad0c4);
+        color: #d90429;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .negative {
+        background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+        color: var(--success);
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .result-container h2 {
+        margin-bottom: 15px;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      .result-image {
+        max-width: 200px;
+        margin: 20px auto;
+        display: block;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-top: 30px;
+      }
+
+      .info-box {
+        background: #e8f4fc;
+        border-left: 4px solid var(--primary);
+        padding: 15px;
+        margin: 25px 0;
+        border-radius: 4px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        header h1 {
+          font-size: 2rem;
+        }
+
+        .form-container {
+          grid-template-columns: 1fr;
+        }
+
+        .content {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1><i class="fas fa-heartbeat"></i> Diabetes Health Predictor</h1>
+        <p>Enter your health metrics to assess your diabetes risk</p>
+      </header>
+
+      <div class="content">
+        <div class="info-box">
+          <i class="fas fa-info-circle"></i> This tool uses machine learning to
+          predict diabetes risk based on established health parameters. Always
+          consult a healthcare professional for medical advice.
+        </div>
+
+        <form action="{{ url_for('predict')}}" method="post">
+          <div class="form-container">
+            <div class="input-group">
+              <label for="pregnancies"
+                ><i class="fas fa-baby"></i> Number of Pregnancies</label
+              >
+              <input
+                type="number"
+                id="pregnancies"
+                name="pregnancies"
+                placeholder="e.g., 0"
+                min="0"
+                max="20"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="glucose"
+                ><i class="fas fa-tint"></i> Glucose Level (mg/dL)</label
+              >
+              <input
+                type="number"
+                id="glucose"
+                name="glucose"
+                placeholder="e.g., 80"
+                min="0"
+                max="300"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="bloodpressure"
+                ><i class="fas fa-heart"></i> Blood Pressure (mmHg)</label
+              >
+              <input
+                type="number"
+                id="bloodpressure"
+                name="bloodpressure"
+                placeholder="e.g., 80"
+                min="0"
+                max="150"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="skinthickness"
+                ><i class="fas fa-ruler-combined"></i> Skin Thickness
+                (mm)</label
+              >
+              <input
+                type="number"
+                id="skinthickness"
+                name="skinthickness"
+                placeholder="e.g., 20"
+                min="0"
+                max="100"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="insulin"
+                ><i class="fas fa-syringe"></i> Insulin Level (IU/mL)</label
+              >
+              <input
+                type="number"
+                id="insulin"
+                name="insulin"
+                placeholder="e.g., 80"
+                min="0"
+                max="300"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="bmi"
+                ><i class="fas fa-weight"></i> Body Mass Index (kg/m²)</label
+              >
+              <input
+                type="number"
+                step="0.1"
+                id="bmi"
+                name="bmi"
+                placeholder="e.g., 23.1"
+                min="10"
+                max="50"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="dpf"
+                ><i class="fas fa-dna"></i> Diabetes Pedigree Function</label
+              >
+              <input
+                type="number"
+                step="0.001"
+                id="dpf"
+                name="dpf"
+                placeholder="e.g., 0.52"
+                min="0"
+                max="2.5"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="age"
+                ><i class="fas fa-birthday-cake"></i> Age (years)</label
+              >
+              <input
+                type="number"
+                id="age"
+                name="age"
+                placeholder="e.g., 34"
+                min="1"
+                max="120"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="btn-container">
+            <button type="submit" class="btn">
+              <i class="fas fa-stethoscope"></i> Predict Diabetes Risk
+            </button>
+          </div>
+        </form>
+
+        {% if prediction is not none %}
+        <div class="result-container">
+          {% if prediction == 1 %}
+          <div class="positive">
+            <h2>
+              <i class="fas fa-exclamation-triangle"></i> Prediction Result
+            </h2>
+            <p>Our analysis indicates a higher risk of diabetes.</p>
+            <p>
+              Please consult with a healthcare professional for further
+              evaluation.
+            </p>
+            <img
+              class="result-image"
+              src="{{ url_for('static', filename='diabetes.webp') }}"
+              alt="Diabetes Risk"
+            />
+          </div>
+          {% else %}
+          <div class="negative">
+            <h2><i class="fas fa-check-circle"></i> Prediction Result</h2>
+            <p>Our analysis indicates a lower risk of diabetes.</p>
+            <p>
+              Continue maintaining a healthy lifestyle with regular check-ups.
+            </p>
+            <img
+              class="result-image"
+              src="{{ url_for('static', filename='no-diabetes.webp') }}"
+              alt="Low Diabetes Risk"
+            />
+          </div>
+          {% endif %}
+
+          <div style="margin-top: 20px">
+            <p>
+              <strong>Disclaimer:</strong> This prediction is for informational
+              purposes only and should not replace professional medical advice.
+            </p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <footer>
+        <p>
+          Diabetes Health Predictor © 2023 | For demonstration purposes only
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
